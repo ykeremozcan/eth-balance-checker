@@ -1,0 +1,23 @@
+import requests
+
+def get_eth_balance(eth_address):
+    api_key = "WMNBUVDW3XVQJ7RSYGUJDT4IQ8VANQYDGT"
+    api_url = f'https://api.etherscan.io/api?module=account&action=balance&address={eth_address}&tag=latest&apikey={api_key}'
+    response = requests.get(api_url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        # Etherscan returns balance in Wei, convert it to ETH (1 ETH = 10^18 Wei)
+        balance_in_eth = int(data.get('result', 0)) / 10**18
+        return balance_in_eth
+    else:
+        print(f"Error fetching balance for {eth_address}: {response.status_code}")
+        return 0
+
+def main():
+    eth_address = input("Enter the Ethereum address: ")
+    balance = get_eth_balance(eth_address)
+    print(f"Balance for {eth_address}: {balance} ETH")
+
+if __name__ == "__main__":
+    main()
